@@ -34,4 +34,11 @@ class AirCoinTest {
 		AirCoin otherAirCoin = new AirCoin(1L);
 		assertThrows(AirCoinAmountBeyondLimitException.class, () -> airCoin.compareAmountIsEqual(otherAirCoin));
 	}
+
+	@Test
+	void should_throw_exception_when_compare_two_airCoins_given_a_airCoin_amount_is_1_and_another_airCoin_amount_is_null() {
+		AirCoin airCoin = new AirCoin(1L);
+		AirCoin otherAirCoin = new AirCoin(null);
+		assertThrows(AirCoinAmountBeyondLimitException.class, () -> airCoin.compareAmountIsEqual(otherAirCoin));
+	}
 }

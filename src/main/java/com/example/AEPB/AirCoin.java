@@ -12,6 +12,9 @@ public class AirCoin {
     }
 
     public boolean compareAmountIsEqual(AirCoin otherAirCoin) {
+        if (this.amount == null || otherAirCoin.amount == null) {
+            throw new AirCoinAmountBeyondLimitException("AirCoin amount can not be null");
+        }
         if (this.amount < AMOUNT_MIN || otherAirCoin.amount < AMOUNT_MIN || this.amount > AMOUNT_MAX || otherAirCoin.amount > AMOUNT_MAX) {
             throw new AirCoinAmountBeyondLimitException("AirCoin amount beyond limit");
         }
