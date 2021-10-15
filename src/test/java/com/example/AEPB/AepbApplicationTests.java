@@ -1,9 +1,9 @@
 package com.example.AEPB;
 
-import org.junit.jupiter.api.Assertions;
+import com.example.AEPB.excepition.AirCoinAmountBeyondLimitException;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class HelloTest {
 
@@ -20,6 +20,13 @@ class AirCoinTest {
 	void should_return_equal_when_compare_two_airCoins_given_a_airCoin_amount_is_0_and_another_airCoin_amount_is_0() {
 		AirCoin airCoin = new AirCoin(0L);
 		AirCoin otherAirCoin = new AirCoin(0L);
-		Assertions.assertTrue(airCoin.compareAmountIsEqual(otherAirCoin));
+		assertTrue(airCoin.compareAmountIsEqual(otherAirCoin));
 	}
+	@Test
+	void should_return_equal_when_compare_two_airCoins_given_a_airCoin_amount_is_one_billion_and_another_airCoin_amount_is_one_billion_plus_one() {
+		AirCoin airCoin = new AirCoin(1000000000L);
+		AirCoin otherAirCoin = new AirCoin(1000000001L);
+		assertThrows(AirCoinAmountBeyondLimitException.class, () -> airCoin.compareAmountIsEqual(otherAirCoin));
+	}
+
 }
