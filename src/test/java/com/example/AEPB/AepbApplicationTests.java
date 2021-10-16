@@ -23,22 +23,28 @@ class AirCoinTest {
 		assertTrue(airCoin.compareAmountIsEqual(otherAirCoin));
 	}
 	@Test
-	void should_return_equal_when_compare_two_airCoins_given_a_airCoin_amount_is_one_billion_and_another_airCoin_amount_is_one_billion_plus_one() {
-		AirCoin airCoin = new AirCoin(1000000000L);
-		AirCoin otherAirCoin = new AirCoin(1000000001L);
-		assertThrows(AirCoinAmountBeyondLimitException.class, () -> airCoin.compareAmountIsEqual(otherAirCoin));
+	void should_throw_exception_given_more_than_one_billion() {
+		try {
+			new AirCoin(1000000001L);
+		} catch (AirCoinAmountBeyondLimitException e) {
+			assertEquals("AirCoin amount beyond limit",e.getMessage());
+		}
 	}
 	@Test
-	void should_throw_exception_when_compare_two_airCoins_given_a_airCoin_amount_is_negative_1_and_another_airCoin_amount_is_negative_1() {
-		AirCoin airCoin = new AirCoin(-1L);
-		AirCoin otherAirCoin = new AirCoin(1L);
-		assertThrows(AirCoinAmountBeyondLimitException.class, () -> airCoin.compareAmountIsEqual(otherAirCoin));
+	void should_throw_exception_given_less_than_0() {
+		try {
+			new AirCoin(-1L);
+		} catch (AirCoinAmountBeyondLimitException e) {
+			assertEquals("AirCoin amount beyond limit",e.getMessage());
+		}
 	}
 
 	@Test
-	void should_throw_exception_when_compare_two_airCoins_given_a_airCoin_amount_is_1_and_another_airCoin_amount_is_null() {
-		AirCoin airCoin = new AirCoin(1L);
-		AirCoin otherAirCoin = new AirCoin(null);
-		assertThrows(AirCoinAmountBeyondLimitException.class, () -> airCoin.compareAmountIsEqual(otherAirCoin));
+	void should_throw_exception_given_null() {
+		try {
+			new AirCoin(null);
+		} catch (AirCoinAmountBeyondLimitException e) {
+			assertEquals("AirCoin amount can not be null",e.getMessage());
+		}
 	}
 }
