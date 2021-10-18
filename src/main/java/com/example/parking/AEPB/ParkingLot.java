@@ -10,6 +10,7 @@ public class ParkingLot {
 
 
     public Ticket parkingCarAndGetTicket(Car car) {
+        if (MAX_PARKING_COUNT==parkingLotMap.size()) return  null;
         Ticket ticket = new Ticket(String.valueOf(car.hashCode()));
         parkingLotMap.put(ticket, car);
         return ticket;

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /*
  1、
@@ -15,6 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * when 存车
  * then 存车成功给予存车票
  2、
+ * * given 存有49辆车的停车场和一辆想存的车
+ * when 存车
+ * then 存车失败没有存车票
+ 3、
  * * given 存有50辆车的停车场和一辆想存的车
  * when 存车
  * then 存车失败没有存车票
@@ -70,6 +75,13 @@ public class ParkingLotTest {
             parkingLot.parkingCarAndGetTicket(car);
         }
         return parkingLot;
+    }
+    @Test
+    void should_return_ticket_successfully_when_parking_car_given_parkingLot_which_has_50_car_and_one_parking_car() {
+        ParkingLot parkingLot = setupNumParkingLot(50);
+        Car car = new Car(String.valueOf(parkingLot.hashCode()));
+        parkingLot.parkingCarAndGetTicket(car);
+        assertNull(parkingLot.parkingCarAndGetTicket(car));
     }
 
 }
