@@ -1,7 +1,7 @@
 package com.example.AEPB;
 
 
-import com.example.parking.AEPB.CanNotGetTicketException;
+import com.example.parking.AEPB.CarNotException;
 import com.example.parking.AEPB.Car;
 import com.example.parking.AEPB.ParkingLot;
 import com.example.parking.AEPB.Ticket;
@@ -77,7 +77,16 @@ public class ParkingLotTest {
     @Test
     void should_throw_exception_when_parking_car_given_empty_parkingLot_and_no_parking_car() {
         ParkingLot parkingLot = new ParkingLot();
-        assertThrows(CanNotGetTicketException.class, () -> parkingLot.parkingCarAndGetTicket(null));
+        assertThrows(CarNotException.class, () -> parkingLot.parkingCarAndGetTicket(null));
+    }
+
+    @Test
+    void should_throw_exception_when_take_the_car_give_empty_parkingLot_and_one_used_ticket() {
+        ParkingLot parkingLot = new ParkingLot();
+        Car car = new Car(String.valueOf(parkingLot.hashCode()));
+        Ticket ticket = parkingLot.parkingCarAndGetTicket(car);
+        parkingLot.getCar(ticket);
+        assertThrows(CarNotException.class, () -> parkingLot.getCar(ticket));
     }
 
     private ParkingLot setupNumParkingLot(int num) {
