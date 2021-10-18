@@ -54,4 +54,22 @@ public class ParkingLotTest {
         assertEquals(49, parkingLot.getParkingLotSpace());
         assertEquals(10,ticket.getTicketNumber().length());
     }
+    @Test
+    void should_return_ticket_successfully_when_parking_car_given_parkingLot_which_has_49_car_and_one_parking_car() {
+        ParkingLot parkingLot = setupNumParkingLot(49);
+        Car car = new Car(String.valueOf(parkingLot.hashCode()));
+        parkingLot.parkingCarAndGetTicket(car);
+        assertEquals(50, parkingLot.getTicketCount());
+        assertEquals(0, parkingLot.getParkingLotSpace());
+    }
+
+    private ParkingLot setupNumParkingLot(int num) {
+        ParkingLot parkingLot = new ParkingLot();
+        for (int i = 1; i <= num; i++) {
+            Car car = new Car(String.valueOf(parkingLot.hashCode()));
+            parkingLot.parkingCarAndGetTicket(car);
+        }
+        return parkingLot;
+    }
+
 }
