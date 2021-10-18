@@ -34,10 +34,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * given 有车的停车场和一张无效存车票
  * when 取车
  * then 取车失败抛出异常
- 7、
- * given 有辆车的停车场和我没票
- * when 取车
- * then 取车失败抛出异常
  *
  * */
 public class ParkingLotTest {
