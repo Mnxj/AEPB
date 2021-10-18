@@ -22,27 +22,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * * given 存有50辆车的停车场和一辆想存的车
  * when 存车
  * then 存车失败没有存车票
- 3、
- * given 存有49辆车的停车场和一辆想要存的车
- * when 存车
- * then 存车成功并拿到存车票
  4、
  * given 空的停车场和我没有车
  * when 存车
  * then 存车失败抛出异常
  5、
- * given 有车的停车场和一张存车票
- * when 取车
- * then 取车成功并开出车
- 6、
  * given 空的停车场和一张无效存车票
  * when 取车
  * then 取车失败抛出异常
- 7、
+ 6、
  * given 有车的停车场和一张无效存车票
  * when 取车
  * then 取车失败抛出异常
- 8、
+ 7、
  * given 有辆车的停车场和我没票
  * when 取车
  * then 取车失败抛出异常
@@ -81,12 +73,16 @@ public class ParkingLotTest {
     }
 
     @Test
-    void should_throw_exception_when_take_the_car_give_empty_parkingLot_and_one_used_ticket() {
+    void should_throw_exception_when_take_the_car_give_empty_parkingLot_and_one_invalid_ticket() {
+        ParkingLot parkingLot = new ParkingLot();
+        assertThrows(CarNotException.class, () -> parkingLot.getCar(null));
+    }
+    @Test
+    void should_throw_exception_when_take_the_car_give_parkingLot_and_one_invalid_ticket() {
         ParkingLot parkingLot = new ParkingLot();
         Car car = new Car(String.valueOf(parkingLot.hashCode()));
-        Ticket ticket = parkingLot.parkingCarAndGetTicket(car);
-        parkingLot.getCar(ticket);
-        assertThrows(CarNotException.class, () -> parkingLot.getCar(ticket));
+        parkingLot.parkingCarAndGetTicket(car);
+        assertThrows(CarNotException.class, () -> parkingLot.getCar(null));
     }
 
     private ParkingLot setupNumParkingLot(int num) {
