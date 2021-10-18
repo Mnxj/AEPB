@@ -1,14 +1,13 @@
 package com.example.AEPB;
 
 
+import com.example.parking.AEPB.CanNotGetTicketException;
 import com.example.parking.AEPB.Car;
 import com.example.parking.AEPB.ParkingLot;
 import com.example.parking.AEPB.Ticket;
 import org.junit.jupiter.api.Test;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  1、
@@ -60,12 +59,25 @@ public class ParkingLotTest {
         assertEquals(10,ticket.getTicketNumber().length());
     }
     @Test
+    void should_return_ticket_successfully_when_parking_car_given_parkingLot_which_has_50_car_and_one_parking_car() {
+        ParkingLot parkingLot = setupNumParkingLot(50);
+        Car car = new Car(String.valueOf(parkingLot.hashCode()));
+        parkingLot.parkingCarAndGetTicket(car);
+        assertNull(parkingLot.parkingCarAndGetTicket(car));
+    }
+    @Test
     void should_return_ticket_successfully_when_parking_car_given_parkingLot_which_has_49_car_and_one_parking_car() {
         ParkingLot parkingLot = setupNumParkingLot(49);
         Car car = new Car(String.valueOf(parkingLot.hashCode()));
         parkingLot.parkingCarAndGetTicket(car);
         assertEquals(50, parkingLot.getTicketCount());
         assertEquals(0, parkingLot.getParkingLotSpace());
+    }
+
+    @Test
+    void should_throw_exception_when_parking_car_given_empty_parkingLot_and_no_parking_car() {
+        ParkingLot parkingLot = new ParkingLot();
+        assertThrows(CanNotGetTicketException.class, () -> parkingLot.parkingCarAndGetTicket(null));
     }
 
     private ParkingLot setupNumParkingLot(int num) {
@@ -75,13 +87,6 @@ public class ParkingLotTest {
             parkingLot.parkingCarAndGetTicket(car);
         }
         return parkingLot;
-    }
-    @Test
-    void should_return_ticket_successfully_when_parking_car_given_parkingLot_which_has_50_car_and_one_parking_car() {
-        ParkingLot parkingLot = setupNumParkingLot(50);
-        Car car = new Car(String.valueOf(parkingLot.hashCode()));
-        parkingLot.parkingCarAndGetTicket(car);
-        assertNull(parkingLot.parkingCarAndGetTicket(car));
     }
 
 }
