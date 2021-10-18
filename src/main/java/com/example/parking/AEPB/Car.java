@@ -1,13 +1,13 @@
 package com.example.parking.AEPB;
 
 public class Car {
-    private String parkToken;
+    private String ticket;
 
-    public Car(String parkToken) {
-        this.parkToken = parkToken;
+    public Car(String ticket) {
+        this.ticket = ticket;
     }
 
-    public String getParkToken() {
-        return parkToken;
+    public String getTicket() {
+        return ticket;
     }
 }
