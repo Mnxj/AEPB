@@ -1,7 +1,7 @@
 package com.example.AEPB;
 
 
-import com.example.parking.AEPB.*;
+import com.example.parking.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,41 +32,44 @@ import static org.junit.jupiter.api.Assertions.*;
  * when 取车
  * then 取车失败抛出异常
  *
+
+
+
+ given
+
+
+
+
  * */
 public class ParkingLotTest {
     @Test
     void should_return_ticket_successfully_when_parking_car_given_empty_parkingLot_and_one_parking_car() {
         ParkingLot parkingLot = new ParkingLot();
-        Car car = new Car(String.valueOf(parkingLot.hashCode()));
-        parkingLot.parkingCarAndGetTicket(car);
-        assertEquals(1, parkingLot.getTicketCount());
-        assertEquals(49, parkingLot.getParkingLotSpace());
+        Car car = new Car();
+        Ticket ticket = parkingLot.parkingCarAndGetTicket(car);
+        assertEquals(car, parkingLot.getCar(ticket));
     }
     @Test
     void should_return_null_ticket_when_parking_car_given_parkingLot_which_has_50_car_and_one_parking_car() {
         ParkingLot parkingLot = setupNumParkingLot(50);
-        Car car = new Car(String.valueOf(parkingLot.hashCode()));
+        Car car = new Car();
         parkingLot.parkingCarAndGetTicket(car);
         assertNull(parkingLot.parkingCarAndGetTicket(car));
     }
     @Test
     void should_return_ticket_successfully_when_parking_car_given_parkingLot_which_has_49_car_and_one_parking_car() {
         ParkingLot parkingLot = setupNumParkingLot(49);
-        Car car = new Car(String.valueOf(parkingLot.hashCode()));
-        parkingLot.parkingCarAndGetTicket(car);
-        assertEquals(50, parkingLot.getTicketCount());
-        assertEquals(0, parkingLot.getParkingLotSpace());
+        Car car = new Car();
+        Ticket ticket = parkingLot.parkingCarAndGetTicket(car);
+        assertEquals(car, parkingLot.getCar(ticket));
     }
 
     @Test
     void should_return_car_successfully_when_take_the_car_given_one_car_parked_in_parkingLot_and_one_matched_ticket() {
         ParkingLot parkingLot = new ParkingLot();
-        Car car = new Car(String.valueOf(parkingLot.hashCode()));
+        Car car = new Car();
         Ticket ticket = parkingLot.parkingCarAndGetTicket(car);
-        Car parkingLotCar = parkingLot.getCar(ticket);
-        assertEquals(car.getTicket(), parkingLotCar.getTicket());
-        assertEquals(0, parkingLot.getTicketCount());
-        assertEquals(50, parkingLot.getParkingLotSpace());
+        assertEquals(car, parkingLot.getCar(ticket));
     }
 
     @Test
@@ -83,12 +86,12 @@ public class ParkingLotTest {
     @Test
     void should_throw_exception_when_take_the_car_given_empty_parkingLot_and_one_invalid_ticket() {
         ParkingLot parkingLot = new ParkingLot();
-        assertThrows(InvalidGettingException.class, () -> parkingLot.getCar(new Ticket("asd")));
+        assertThrows(InvalidGettingException.class, () -> parkingLot.getCar(new Ticket()));
     }
     @Test
     void should_throw_exception_when_take_the_car_given_parkingLot_and_one_notMatched_ticket() {
         ParkingLot parkingLot = new ParkingLot();
-        Car car = new Car(String.valueOf(parkingLot.hashCode()));
+        Car car = new Car();
         parkingLot.parkingCarAndGetTicket(car);
         assertThrows(InvalidGettingException.class, () -> parkingLot.getCar(null));
     }
@@ -96,10 +99,12 @@ public class ParkingLotTest {
     private ParkingLot setupNumParkingLot(int num) {
         ParkingLot parkingLot = new ParkingLot();
         for (int i = 1; i <= num; i++) {
-            Car car = new Car(String.valueOf(parkingLot.hashCode()));
+            Car car = new Car();
             parkingLot.parkingCarAndGetTicket(car);
         }
         return parkingLot;
     }
+
+
 
 }
