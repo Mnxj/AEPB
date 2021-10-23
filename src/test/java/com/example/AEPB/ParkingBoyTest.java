@@ -3,8 +3,7 @@ package com.example.AEPB;
 import com.example.parking.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  * given 1号停车场的只有一个空车位，停车小弟。
@@ -73,5 +72,28 @@ public class ParkingBoyTest {
         //then
         assertNotNull(ticket);
     }
+    @Test
+    void should_return_car_successfully_when_take_the_car_given_one_car_parked_in_parkingLot_and_one_matched_ticket() {
+        //given
+        ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
+        Car car = new Car();
+        //when
+        Ticket ticket = parkingLotGroup.parkingCarAndGetTicket(2, car);
+        //then
+        assertEquals(car, parkingLotGroup.getCar(ticket));
+    }
+    @Test
+    void should_return_ticket_successfully_when_parking_given_not_empty_parkingLots_and_one_parking_car() {
+        //given
+        ParkingLot parkingLot = setupNumParkingLot(50);
+        ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
+        parkingLotGroup.getParkingLotList().get(0).setParkingLotMap(parkingLot.getParkingLotMap());
+        Car car = new Car();
+        //when
+        Ticket ticket = parkingLotGroup.parkingCarAndGetTicket(0, car);
+        //then
+        assertNull(ticket);
+    }
+
 
 }

@@ -14,11 +14,7 @@ public class ParkingBoy {
     }
 
     public Car getCar(ParkingLotGroup parkingLotGroup, Ticket ticket) {
-        for (ParkingLot parkingLot : parkingLotGroup.getParkingLotList()) {
-            return parkingLot.getCar(ticket);
-        }
-        return null;
-
+        return parkingLotGroup.getCar(ticket);
     }
 
 

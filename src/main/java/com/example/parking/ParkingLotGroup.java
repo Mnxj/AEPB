@@ -1,5 +1,7 @@
 package com.example.parking;
 
+import com.example.excepition.InvalidGettingException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,12 @@ public class ParkingLotGroup{
         return parkingLotList.get(parkingLotNo).parkingCarAndGetTicket(car);
     }
 
+    public Car getCar(Ticket ticket) {
+        for (ParkingLot parkingLot : parkingLotList) {
+            if (parkingLot.getParkingLotMap().containsKey(ticket)) return parkingLot.getParkingLotMap().remove(ticket);
+        }
+        throw new InvalidGettingException("Unable to take the car.");
+    }
     public List<ParkingLot> getParkingLotList() {
         return parkingLotList;
     }
