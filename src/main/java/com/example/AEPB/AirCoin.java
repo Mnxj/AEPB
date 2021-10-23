@@ -1,6 +1,6 @@
 package com.example.AEPB;
 
-import com.example.AEPB.excepition.AirCoinAmountBeyondLimitException;
+import com.example.excepition.AirCoinAmountBeyondLimitException;
 
 public class AirCoin {
     private static final long AMOUNT_MAX = 1000000000L;

@@ -1,4 +1,4 @@
-package com.example.parking;
+package com.example.excepition;
 
 public class InvalidGettingException extends RuntimeException {
     public InvalidGettingException(String msg) {
