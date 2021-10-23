@@ -38,7 +38,7 @@ public class ParkingBoyTest {
     }
 
     @Test
-    void should_return_ticket_successfully_when_parkingBoy_parking_log_given_parkingLot_one_which_has_49_car_and_one_parking_car() {
+    void should_return_ticket_successfully_when_parkingBoy_parking_given_parkingLot_one_which_has_49_car_and_one_parking_car() {
         //given
         ParkingLot parkingLot = setupNumParkingLot(49);
         ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
@@ -61,6 +61,17 @@ public class ParkingBoyTest {
         Ticket ticket = parkingBoy.parkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
         //then
         assertEquals(car, parkingBoy.getCar(parkingLotGroup, ticket));
+    }
+
+    @Test
+    void should_return_ticket_successfully_when_parking_given_ten_empty_parkingLots_and_one_parking_car() {
+        //given
+        ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
+        Car car = new Car();
+        //when
+        Ticket ticket = parkingLotGroup.parkingCarAndGetTicket(2, car);
+        //then
+        assertNotNull(ticket);
     }
 
 }

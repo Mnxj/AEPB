@@ -1,7 +1,5 @@
 package com.example.parking;
 
-import com.example.excepition.InvalidGettingException;
-
 public class ParkingBoy {
 
     public Ticket parkingBoyParkingCarAndGetTicket(ParkingLotGroup parkingLotGroup, Car car) {
@@ -17,11 +15,10 @@ public class ParkingBoy {
 
     public Car getCar(ParkingLotGroup parkingLotGroup, Ticket ticket) {
         for (ParkingLot parkingLot : parkingLotGroup.getParkingLotList()) {
-            if (parkingLot.getParkingLotMap().containsKey(ticket)) {
-                return parkingLot.getParkingLotMap().remove(ticket);
-            }
+            return parkingLot.getCar(ticket);
         }
-        throw new InvalidGettingException("Unable to take the car.");
+        return null;
+
     }
 
 
