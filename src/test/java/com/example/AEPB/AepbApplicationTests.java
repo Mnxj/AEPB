@@ -1,6 +1,6 @@
 package com.example.AEPB;
 
-import com.example.AEPB.excepition.AirCoinAmountBeyondLimitException;
+import com.example.excepition.AirCoinAmountBeyondLimitException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
