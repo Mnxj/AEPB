@@ -17,4 +17,7 @@ public class SmartParkingBoy {
         }
         return null;
     }
+    public Car getCar(ParkingLotGroup parkingLotGroup, Ticket ticket) {
+        return parkingLotGroup.getCar(ticket);
+    }
 }

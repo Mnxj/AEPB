@@ -13,9 +13,6 @@ package com.example.AEPB;
  * when 停车
  * then  停车成功并获得车票，停在了1号停车位
  *
- * given 都是满停车场，smart boy，一辆车
- * when 停车
- * then  停车失败并抛异常
  *
  * given 一张有效车票，smart boy
  * when 取车
@@ -75,6 +72,14 @@ public class SmartParkingBoyTest {
         Ticket ticket = smartParkingBoy.smartParkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
         assertNotNull(ticket);
         assertEquals(1,parkingLotGroup.getParkingLotList().get(0).getParkingLotMap().size());
+    }
+    @Test
+    void should_return_car_successfully_when_smartParkingBoy_take_the_car_given_one_car_parked_in_parkingLot_and_one_matched_ticket(){
+        SmartParkingBoy smartParkingBoy=new SmartParkingBoy();
+        ParkingLotGroup parkingLotGroup=new ParkingLotGroup();
+        Car car= new Car();
+        Ticket ticket = smartParkingBoy.smartParkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
+        assertEquals(car, smartParkingBoy.getCar(parkingLotGroup, ticket));
     }
 
 }
