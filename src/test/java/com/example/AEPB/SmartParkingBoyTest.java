@@ -18,9 +18,6 @@ package com.example.AEPB;
  * when 取车
  * then  取车成功
  *
- * given 一张无效车票，smart boy
- * when 取车
- * then  取车失败
  *
 */
 
