@@ -53,5 +53,18 @@ public class SmartParkingBoyTest {
         assertNotNull(ticket);
         assertEquals(1,parkingLotGroup.getParkingLotList().get(1).getParkingLotMap().size());
     }
+    @Test
+    void should_return_ticket_successfully_when_smartParkingBoy_parking_given_parkingLot_one_and_two_which_has_49_and_empty_parkingLot_Two_and_one_parking_car(){
+        SmartParkingBoy smartParkingBoy=new SmartParkingBoy();
+        ParkingLotGroup parkingLotGroup=new ParkingLotGroup();
+        ParkingLot parkingLot = setupNumParkingLot(49);
+        ParkingLot parkingLot1 = setupNumParkingLot(49);
+        parkingLotGroup.getParkingLotList().get(0).setParkingLotMap(parkingLot.getParkingLotMap());
+        parkingLotGroup.getParkingLotList().get(1).setParkingLotMap(parkingLot1.getParkingLotMap());
+        Car car= new Car();
+        Ticket ticket = smartParkingBoy.smartParkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
+        assertNotNull(ticket);
+        assertEquals(1,parkingLotGroup.getParkingLotList().get(2).getParkingLotMap().size());
+    }
 
 }
