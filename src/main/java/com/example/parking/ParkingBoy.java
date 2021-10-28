@@ -8,7 +8,7 @@ import java.util.Map;
 
 
 public class ParkingBoy  implements Getting,Parking{
-    private Map<String, ParkingLot> parkingLotMap;
+    private final Map<String, ParkingLot> parkingLotMap;
 
     public ParkingBoy(Map<String, ParkingLot> parkingLotMap) {
         this.parkingLotMap = parkingLotMap;

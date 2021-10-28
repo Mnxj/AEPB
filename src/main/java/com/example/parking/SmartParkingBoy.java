@@ -7,9 +7,8 @@ import com.example.parking.entity.Ticket;
 import java.util.Map;
 
 public class SmartParkingBoy  implements Getting,Parking{
-    private Map<String, ParkingLot> parkingLotMap;
-    public SmartParkingBoy() {
-    }
+    private final Map<String, ParkingLot> parkingLotMap;
+
     public SmartParkingBoy(Map<String, ParkingLot> parkingLotMap) {
         this.parkingLotMap = parkingLotMap;
     }

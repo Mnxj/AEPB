@@ -7,7 +7,7 @@ import com.example.parking.entity.Ticket;
 import java.util.Map;
 
 public class ParkingRobot implements Parking{
-    private Map<String, ParkingLot> parkingLotMap;
+    private final Map<String, ParkingLot> parkingLotMap;
 
     public ParkingRobot(Map<String, ParkingLot> parkingLotMap) {
         this.parkingLotMap = parkingLotMap;

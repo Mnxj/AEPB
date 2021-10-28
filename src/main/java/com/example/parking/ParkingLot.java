@@ -12,8 +12,8 @@ import static java.util.Objects.isNull;
 
 public  class ParkingLot  implements Getting,Parking{
 
-    private Map<Ticket, Car> parkingLotMap =new HashMap<>();
-    private  int maxParkingCount;
+    private final Map<Ticket, Car> parkingLotMap =new HashMap<>();
+    private final int maxParkingCount;
 
 
     public ParkingLot(){
