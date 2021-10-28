@@ -6,7 +6,7 @@ import com.example.parking.entity.Ticket;
 
 import java.util.Map;
 
-public class SmartParkingBoy  implements ParkAndGet{
+public class SmartParkingBoy  implements Getting,Parking{
     private Map<String, ParkingLot> parkingLotMap;
     public SmartParkingBoy() {
     }
@@ -27,7 +27,7 @@ public class SmartParkingBoy  implements ParkAndGet{
 
     @Override
     public Car getCar(Ticket ticket) {
-        return ParkAndGet.getCarByTicket(ticket,parkingLotMap);
+        return Getting.getCarByTicket(ticket,parkingLotMap);
     }
 
     private int getTheMostAvailableParkingLot() {

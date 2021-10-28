@@ -1,13 +1,12 @@
 package com.example.parking;
 
-import com.example.excepition.InvalidGettingException;
 import com.example.excepition.InvalidParkingException;
 import com.example.parking.entity.Car;
 import com.example.parking.entity.Ticket;
 
 import java.util.Map;
 
-public class ParkingRobot implements ParkAndGet{
+public class ParkingRobot implements Parking{
     private Map<String, ParkingLot> parkingLotMap;
 
     public ParkingRobot(Map<String, ParkingLot> parkingLotMap) {
@@ -24,10 +23,6 @@ public class ParkingRobot implements ParkAndGet{
         return parkingLot.parkingCarAndGetTicket(car);
     }
 
-    @Override
-    public Car getCar(Ticket ticket) {
-        throw new InvalidGettingException("Parking Robot Disabled Pike Up Car!!!!!!");
-    }
 
     private int getTheBiggestVacancyRateParkingLot() {
         int biggestVacancyRateParkingLotNumber = 1;

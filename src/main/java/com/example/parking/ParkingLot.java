@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-public  class ParkingLot  implements ParkAndGet{
+public  class ParkingLot  implements Getting,Parking{
 
     private Map<Ticket, Car> parkingLotMap =new HashMap<>();
     private  int maxParkingCount;

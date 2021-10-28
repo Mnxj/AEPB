@@ -1,6 +1,5 @@
 package com.example.AEPB;
 
-import com.example.excepition.InvalidGettingException;
 import com.example.excepition.InvalidParkingException;
 import com.example.parking.ParkingLot;
 import com.example.parking.ParkingRobot;
@@ -96,21 +95,5 @@ public class ParkingRobotTest {
         Car car = new Car();
         Ticket ticket = parkingRobot.parkingCarAndGetTicket(car);
         assertEquals(car, parkingLotMap.get("1").getCar(ticket));
-    }
-    /*
-     * 5.
-     * given 一个停车场，停车场10个停车位和一辆车，ParkingRobot，对应的车票
-     * when 取车
-     * then 取车异常
-     * */
-    @Test
-    void should_throw_disabled_pike_up_car_when_take_the_car_given_parkingLot_has_one_car_and_parking_robot_and_one_matched_ticket() {
-        ParkingLot parkingLot = new ParkingLot(10);
-        Map<String, ParkingLot> parkingLotMap = new HashMap<>();
-        parkingLotMap.put("1", parkingLot);
-        ParkingRobot parkingRobot = new ParkingRobot(parkingLotMap);
-        Car car = new Car();
-        Ticket ticket = parkingRobot.parkingCarAndGetTicket(car);
-        assertThrows(InvalidGettingException.class, () -> parkingRobot.getCar(ticket));
     }
 }

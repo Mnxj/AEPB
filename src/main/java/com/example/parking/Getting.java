@@ -5,8 +5,7 @@ import com.example.parking.entity.Ticket;
 
 import java.util.Map;
 
-public interface ParkAndGet {
-    Ticket parkingCarAndGetTicket(Car car);
+public interface Getting {
     Car getCar(Ticket ticket);
 
     static Car getCarByTicket(Ticket ticket, Map<String, ParkingLot> parkingLotMap) {
