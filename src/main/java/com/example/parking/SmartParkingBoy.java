@@ -1,23 +1,43 @@
 package com.example.parking;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import com.example.excepition.InvalidParkingException;
+import com.example.parking.entity.Car;
+import com.example.parking.entity.Ticket;
 
-public class SmartParkingBoy {
-    public Ticket smartParkingBoyParkingCarAndGetTicket(ParkingLotGroup parkingLotGroup, Car car) {
-        List<ParkingLot> parkingLotList = new ArrayList<>(parkingLotGroup.getParkingLotList());
-        parkingLotList.sort(Comparator.comparingInt(p -> p.getParkingLotMap().size()));
-        int parkingLotNo=0;
-        for (ParkingLot parkingLot:parkingLotGroup.getParkingLotList()){
-            if (parkingLot.equals(parkingLotList.get(0))){
-                return parkingLotGroup.parkingCarAndGetTicket(parkingLotNo, car);
-            }
-            parkingLotNo++;
-        }
-        return null;
+import java.util.Map;
+
+public class SmartParkingBoy  implements ParkAndGet{
+    private Map<String, ParkingLot> parkingLotMap;
+    public SmartParkingBoy() {
     }
-    public Car getCar(ParkingLotGroup parkingLotGroup, Ticket ticket) {
-        return parkingLotGroup.getCar(ticket);
+    public SmartParkingBoy(Map<String, ParkingLot> parkingLotMap) {
+        this.parkingLotMap = parkingLotMap;
+    }
+
+    @Override
+    public Ticket parkingCarAndGetTicket(Car car) {
+        int mostParkingLotNumber = getTheMostAvailableParkingLot();
+        if (parkingLotMap.get(String.valueOf(mostParkingLotNumber)).checkParkingLotIsFull()) {
+            throw new InvalidParkingException("The parkingLot is full, can not parking any car.");
+        }
+        ParkingLot parkingLot = parkingLotMap.get(String.valueOf(mostParkingLotNumber));
+        Ticket ticket = parkingLot.parkingCarAndGetTicket(car);
+        return ticket;
+    }
+
+    @Override
+    public Car getCar(Ticket ticket) {
+        return ParkAndGet.getCarByTicket(ticket,parkingLotMap);
+    }
+
+    private int getTheMostAvailableParkingLot() {
+        int mostParkingNumber = 1;
+        for (int parkingLotNumber = 2; parkingLotNumber <= 10; parkingLotNumber++) {
+            if (parkingLotMap.get(String.valueOf(mostParkingNumber)).getParkingLotRemainCount()
+                    < parkingLotMap.get(String.valueOf(parkingLotNumber)).getParkingLotRemainCount()) {
+                mostParkingNumber = parkingLotNumber;
+            }
+        }
+        return mostParkingNumber;
     }
 }

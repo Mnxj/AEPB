@@ -1,99 +1,260 @@
 package com.example.AEPB;
 
-import com.example.parking.*;
+import com.example.excepition.InvalidGettingException;
+import com.example.excepition.InvalidParkingException;
+import com.example.parking.ParkingBoy;
+import com.example.parking.ParkingLot;
+import com.example.parking.entity.Car;
+import com.example.parking.entity.Ticket;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.IntStream;
 
-/*
- * given 1号停车场的只有一个空车位，停车小弟。
- * when 停车
- * then 停车小弟在1号停车场的停车成功
- *
- * given 拿车票取车停车小弟。
- * when 取车
- * then 停车小弟在1号停车场的取车成功
- *
- * given 10个空停车场，自己停车。
- * when 停车
- * then 停车成功返回车票
- *
- * given 没有空位的一号停车场自己停车。
- * when 停车
- * then 停车失败
- *
- * given 自己拿车票取车。
- * when 停车
- * then 取车成功
- */
-public class ParkingBoyTest {
-    private ParkingLot setupNumParkingLot(int num) {
-        ParkingLot parkingLot = new ParkingLot();
-        for (int i = 1; i <= num; i++) {
-            Car car = new Car();
-            parkingLot.parkingCarAndGetTicket(car);
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class ParkingBoyTest {
+    /*
+     * 1、
+     * given 10个停车场都未停车，ParkingBoy，停放一辆车
+     * when 停车
+     * then 停车成功并获得车票，确定停到1号停车场
+     * */
+    @Test
+    void should_park_car_and_get_ticket_successfully_when_parking_car_given_ten_empty_parkingLots_and_parking_boy_and_one_parking_car() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        ParkingBoy parkingBoy = new ParkingBoy(parkingLotMap);
+        Car car = new Car();
+        Ticket ticket = parkingBoy.parkingCarAndGetTicket(car);
+        assertEquals(car, parkingBoy.getCar(ticket));
+    }
+
+    private Map<String, ParkingLot> creatParkingLots() {
+        Map<String, ParkingLot> parkingLotMap = new HashMap<>();
+        IntStream.rangeClosed(1, 10).forEach(parkingLotNumber -> {
+            ParkingLot parkingLot = new ParkingLot();
+            parkingLotMap.put(String.valueOf(parkingLotNumber), parkingLot);
+        });
+        return parkingLotMap;
+    }
+
+    /*
+     * 2、
+     * given 10个停车场都未停车，自己将一辆车停1号停车场，
+     * when 停车
+     * then 停车成功并获得车票，并确定停到1号停车场
+     * */
+    @Test
+    void should_park_car_and_get_ticket_successfully_when_parking_car_given_ten_empty_parkingLots_and_self_parking_No1_parkingLot_and_one_parking_car() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        Car car = new Car();
+        Ticket ticket = parkingLotMap.get("1").parkingCarAndGetTicket(car);
+        assertEquals(car, parkingLotMap.get("1").getCar(ticket));
+    }
+
+    /*
+     * 3、
+     * given 10个停车场都停满，ParkingBoy，停放一辆车
+     * when 停车
+     * then 停车失败抛出异常
+     * */
+    @Test
+    void should_park_car_and_get_ticket_failed_when_parking_car_given_ten_full_parkingLots_and_parking_boy_and_one_parking_car() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        for (int parkingLotNo = 1; parkingLotNo <= 10; parkingLotNo++) {
+            for (int carNo = 0; carNo < 50; carNo++) {
+                Car car = new Car();
+                parkingLotMap.get(String.valueOf(parkingLotNo)).parkingCarAndGetTicket(car);
+            }
         }
-        return parkingLot;
+        ParkingBoy parkingBoy = new ParkingBoy(parkingLotMap);
+        Car extraCar = new Car();
+        assertThrows(InvalidParkingException.class, () -> parkingBoy.parkingCarAndGetTicket(extraCar));
     }
 
+    /*
+     * 4、
+     * given 10个停车场都停满，自己停一辆车到1号停车场，
+     * when 停车
+     * then 停车失败抛出异常
+     * */
     @Test
-    void should_return_ticket_successfully_when_parkingBoy_parking_given_parkingLot_one_which_has_49_car_and_one_parking_car() {
-        //given
-        ParkingLot parkingLot = setupNumParkingLot(49);
-        ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
-        parkingLotGroup.getParkingLotList().get(0).setParkingLotMap(parkingLot.getParkingLotMap());
-        ParkingBoy parkingBoy = new ParkingBoy();
-        Car car = new Car();
-        //when
-        Ticket ticket = parkingBoy.parkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
-        //then
-        assertNotNull(ticket);
+    void should_park_car_and_get_ticket_failed_when_parking_car_given_ten_full_parkingLots_and_self_parking_No1_parkingLot_and_one_parking_car() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        for (int parkingLotNo = 1; parkingLotNo <= 10; parkingLotNo++) {
+            for (int carNo = 0; carNo < 50; carNo++) {
+                Car car = new Car();
+                parkingLotMap.get(String.valueOf(parkingLotNo)).parkingCarAndGetTicket(car);
+            }
+        }
+        Car extraCar = new Car();
+        assertThrows(InvalidParkingException.class, () -> parkingLotMap.get("1").parkingCarAndGetTicket(extraCar));
     }
 
+    /*
+     * 5、
+     * given 10个停车场都未停车，自己停一辆车到2号停车场，
+     * when 停车
+     * then 停车成功并获得车票，并确定停到2号停车场
+     * */
     @Test
-    void should_return_car_successfully_when_parkingBoy_take_the_car_given_one_car_parked_in_parkingLot_and_one_matched_ticket() {
-        //given
-        ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
-        ParkingBoy parkingBoy = new ParkingBoy();
+    void should_park_car_and_get_ticket_successfully_when_parking_car_given_ten_empty_parkingLots_and_self_parking_No2_parkingLot_and_one_parking_car() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
         Car car = new Car();
-        //when
-        Ticket ticket = parkingBoy.parkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
-        //then
-        assertEquals(car, parkingBoy.getCar(parkingLotGroup, ticket));
+        Ticket ticket = parkingLotMap.get("2").parkingCarAndGetTicket(car);
+        assertEquals(car, parkingLotMap.get("2").getCar(ticket));
     }
 
+    /*
+     * 6、
+     * given 1号停车场有一个空位，2号停车场停了一辆车，ParingBoy，停放一辆车
+     * when 停车
+     * then 停车成功并获得车票，并确定停到1号停车场
+     * */
     @Test
-    void should_return_ticket_successfully_when_parking_given_ten_empty_parkingLots_and_one_parking_car() {
-        //given
-        ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
-        Car car = new Car();
-        //when
-        Ticket ticket = parkingLotGroup.parkingCarAndGetTicket(2, car);
-        //then
-        assertNotNull(ticket);
-    }
-    @Test
-    void should_return_car_successfully_when_take_the_car_given_one_car_parked_in_parkingLot_and_one_matched_ticket() {
-        //given
-        ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
-        Car car = new Car();
-        //when
-        Ticket ticket = parkingLotGroup.parkingCarAndGetTicket(2, car);
-        //then
-        assertEquals(car, parkingLotGroup.getCar(ticket));
-    }
-    @Test
-    void should_return_ticket_successfully_when_parking_given_not_empty_parkingLots_and_one_parking_car() {
-        //given
-        ParkingLot parkingLot = setupNumParkingLot(50);
-        ParkingLotGroup parkingLotGroup = new ParkingLotGroup();
-        parkingLotGroup.getParkingLotList().get(0).setParkingLotMap(parkingLot.getParkingLotMap());
-        Car car = new Car();
-        //when
-        Ticket ticket = parkingLotGroup.parkingCarAndGetTicket(0, car);
-        //then
-        assertNull(ticket);
+    void should_park_car_and_get_ticket_successfully_when_parking_car_given_No1_parkingLot_has_49_cars_and_No2_parkingLot_has_one_car_and_parking_boy_and_one_parking_car() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        ParkingBoy parkingBoy = new ParkingBoy(parkingLotMap);
+        for (int carNo = 0; carNo < 49; carNo++) {
+            Car car = new Car();
+            parkingBoy.parkingCarAndGetTicket(car);
+        }
+        Car no2ParkingLotCar = new Car();
+        parkingLotMap.get("2").parkingCarAndGetTicket(no2ParkingLotCar);
+        Car newCar = new Car();
+        Ticket ticket = parkingBoy.parkingCarAndGetTicket(newCar);
+        assertEquals(newCar, parkingLotMap.get("1").getCar(ticket));
     }
 
+    /*
+     * 7、
+     * given 1号停车场有一个空位，2号停车场停了一辆车，自己停一辆车2号停车场
+     * when 停车
+     * then 停车成功并获得车票，确定停到2号停车场
+     * */
+    @Test
+    void should_park_car_and_get_ticket_successfully_when_parking_car_given_No1_parkingLot_has_49_cars_and_No2_parkingLot_has_one_car_and_self_parking_No2_parkingLot_and_one_parking_car() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        ParkingBoy parkingBoy = new ParkingBoy(parkingLotMap);
+        for (int carNo = 0; carNo < 49; carNo++) {
+            Car car = new Car();
+            parkingBoy.parkingCarAndGetTicket(car);
+        }
+        Car no2ParkingLotCar = new Car();
+        parkingLotMap.get("2").parkingCarAndGetTicket(no2ParkingLotCar);
+        Car newCar = new Car();
+        Ticket ticket = parkingLotMap.get("2").parkingCarAndGetTicket(newCar);
+        assertEquals(newCar, parkingLotMap.get("2").getCar(ticket));
+    }
+
+    /*
+     * 8、
+     * given 1号停车场有一个空位，2号停车场停了一辆车，自己停放一辆车到1号停车场
+     * when 停车
+     * then 停车成功并获得车票，并确定停到1号停车场
+     * */
+    @Test
+    void should_park_car_and_get_ticket_successfully_when_parking_car_given_No1_parkingLot_has_49_cars_and_No2_parkingLot_has_one_car_and_self_parking_No1_parkingLot_and_one_parking_car() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        ParkingBoy parkingBoy = new ParkingBoy(parkingLotMap);
+        for (int carNo = 0; carNo < 49; carNo++) {
+            Car car = new Car();
+            parkingBoy.parkingCarAndGetTicket(car);
+        }
+        Car no2ParkingLotCar = new Car();
+        parkingLotMap.get("2").parkingCarAndGetTicket(no2ParkingLotCar);
+        Car newCar = new Car();
+        Ticket ticket = parkingLotMap.get("1").parkingCarAndGetTicket(newCar);
+        assertEquals(newCar, parkingLotMap.get("1").getCar(ticket));
+    }
+
+    /*
+     * 9、
+     * given 1号停车场停有一辆车，自己使用对应票取1号停车场到对应车
+     * when 取车
+     * then 取车成功
+     * */
+    @Test
+    void should_get_car_successfully_when_take_the_car_given_No1_parkingLot_has_one_cars_and_self_take_No1_parkingLot_and_one_matched_ticket() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        Car car = new Car();
+        Ticket ticket = parkingLotMap.get("1").parkingCarAndGetTicket(car);
+
+        assertEquals(car, parkingLotMap.get("1").getCar(ticket));
+    }
+
+    /*
+     * 10、
+     * given 1号停车场停有一辆车，自己1号停车场的对应票取2号停车场
+     * when 取车
+     * then 取车失败并抛异常
+     * */
+    @Test
+    void should_get_car_failed_and_throw_exception_when_take_the_car_given_No1_parkingLot_has_one_cars_and_self_take_No2_parkingLot_and_one_matched_ticket_for_No1_parkingLot() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        Car car = new Car();
+        Ticket ticket = parkingLotMap.get("1").parkingCarAndGetTicket(car);
+        assertThrows(InvalidGettingException.class, () -> parkingLotMap.get("2").getCar(ticket));
+    }
+
+    /*
+     * 11、
+     * given 1号停车场停有一辆车，给ParkingBoy对应票
+     * when 取车
+     * then 取车成功
+     * */
+    @Test
+    void should_get_car_successfully_when_take_the_car_given_No1_parkingLot_has_one_cars_and_parking_boy_and_one_matched_ticket() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        Car car = new Car();
+        Ticket ticket = parkingLotMap.get("1").parkingCarAndGetTicket(car);
+        ParkingBoy parkingBoy = new ParkingBoy(parkingLotMap);
+        assertEquals(car, parkingBoy.getCar(ticket));
+    }
+
+    /*
+     * 12、
+     * given 1号停车场停有一辆车，自己无效票取1号停车场
+     * when 取车
+     * then 取车失败并抛异常
+     * */
+    @Test
+    void should_get_car_failed_and_throw_exception_when_take_the_car_given_No1_parkingLot_has_one_cars_and_self_take_No1_parkingLot_and_one_invalid_ticket() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        Car car = new Car();
+        parkingLotMap.get("1").parkingCarAndGetTicket(car);
+        assertThrows(InvalidGettingException.class, () -> parkingLotMap.get("1").getCar(null));
+    }
+
+    /*
+     * 13、
+     * given 1号停车场停有一辆车，自己无效票取2号停车场到车
+     * when 取车
+     * then 取车失败并抛异常
+     * */
+    @Test
+    void should_get_car_failed_and_throw_exception_when_take_the_car_given_No1_parkingLot_has_one_cars_and_self_take_No2_parkingLot_and_one_invalid_ticket() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        Car car = new Car();
+        parkingLotMap.get("1").parkingCarAndGetTicket(car);
+        assertThrows(InvalidGettingException.class, () -> parkingLotMap.get("2").getCar(null));
+    }
+
+    /*
+     * 14、
+     * given 1号停车场停有一辆车，给ParkingBoy无效票
+     * when 取车
+     * then 取车失败并抛异常
+     * */
+    @Test
+    void should_get_car_failed_and_throw_exception_when_take_the_car_given_No1_parkingLot_has_one_cars_and_parking_boy_and_one_invalid_ticket() {
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        Car car = new Car();
+        parkingLotMap.get("1").parkingCarAndGetTicket(car);
+        ParkingBoy parkingBoy = new ParkingBoy(parkingLotMap);
+        assertThrows(InvalidGettingException.class, () -> parkingBoy.getCar(null));
+    }
 
 }

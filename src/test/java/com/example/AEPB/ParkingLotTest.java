@@ -4,6 +4,8 @@ package com.example.AEPB;
 import com.example.excepition.InvalidGettingException;
 import com.example.excepition.InvalidParkingException;
 import com.example.parking.*;
+import com.example.parking.entity.Car;
+import com.example.parking.entity.Ticket;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

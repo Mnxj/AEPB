@@ -22,61 +22,65 @@ package com.example.AEPB;
 */
 
 import com.example.parking.*;
+import com.example.parking.entity.Car;
+import com.example.parking.entity.Ticket;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class SmartParkingBoyTest {
-    private ParkingLot setupNumParkingLot(int num) {
-        ParkingLot parkingLot = new ParkingLot();
-        for (int i = 1; i <= num; i++) {
-            Car car = new Car();
-            parkingLot.parkingCarAndGetTicket(car);
-        }
-        return parkingLot;
+    private Map<String, ParkingLot> creatParkingLots() {
+        Map<String, ParkingLot> parkingLotMap = new HashMap<>();
+        IntStream.rangeClosed(1, 10).forEach(parkingLotNumber -> {
+            ParkingLot parkingLot = new ParkingLot();
+            parkingLotMap.put(String.valueOf(parkingLotNumber), parkingLot);
+        });
+        return parkingLotMap;
     }
     @Test
     void should_return_ticket_successfully_when_smartParkingBoy_parking_given_parkingLot_one_which_has_49_and_one_parking_car(){
-        SmartParkingBoy smartParkingBoy=new SmartParkingBoy();
-        ParkingLotGroup parkingLotGroup=new ParkingLotGroup();
-        ParkingLot parkingLot = setupNumParkingLot(49);
-        parkingLotGroup.getParkingLotList().get(0).setParkingLotMap(parkingLot.getParkingLotMap());
-        Car car= new Car();
-        Ticket ticket = smartParkingBoy.smartParkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        parkingLotMap.get("1").parkingCarAndGetTicket(new Car());
+        SmartParkingBoy smartParkingBoy = new SmartParkingBoy(parkingLotMap);
+        Car car = new Car();
+        Ticket ticket = smartParkingBoy.parkingCarAndGetTicket(car);
         assertNotNull(ticket);
-        assertEquals(1,parkingLotGroup.getParkingLotList().get(1).getParkingLotMap().size());
+        assertNotNull(parkingLotMap.get("2"));
     }
     @Test
     void should_return_ticket_successfully_when_smartParkingBoy_parking_given_parkingLot_one_and_two_which_has_49_and_one_parking_car(){
-        SmartParkingBoy smartParkingBoy=new SmartParkingBoy();
-        ParkingLotGroup parkingLotGroup=new ParkingLotGroup();
-        ParkingLot parkingLot = setupNumParkingLot(49);
-        ParkingLot parkingLot1 = setupNumParkingLot(49);
-        parkingLotGroup.getParkingLotList().get(0).setParkingLotMap(parkingLot.getParkingLotMap());
-        parkingLotGroup.getParkingLotList().get(1).setParkingLotMap(parkingLot1.getParkingLotMap());
-        Car car= new Car();
-        Ticket ticket = smartParkingBoy.smartParkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        parkingLotMap.get("1").parkingCarAndGetTicket(new Car());
+        parkingLotMap.get("2").parkingCarAndGetTicket(new Car());
+        parkingLotMap.get("2").parkingCarAndGetTicket(new Car());
+        SmartParkingBoy smartParkingBoy = new SmartParkingBoy(parkingLotMap);
+        Car car = new Car();
+        Ticket ticket = smartParkingBoy.parkingCarAndGetTicket(car);
         assertNotNull(ticket);
-        assertEquals(1,parkingLotGroup.getParkingLotList().get(2).getParkingLotMap().size());
+        assertNotNull(parkingLotMap.get("3"));
     }
 
     @Test
     void should_return_ticket_successfully_when_smartParkingBoy_parking_given_empty_parkingLot_and_one_parking_car(){
-        SmartParkingBoy smartParkingBoy=new SmartParkingBoy();
-        ParkingLotGroup parkingLotGroup=new ParkingLotGroup();
-        Car car= new Car();
-        Ticket ticket = smartParkingBoy.smartParkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        SmartParkingBoy smartParkingBoy = new SmartParkingBoy(parkingLotMap);
+        Car car = new Car();
+        Ticket ticket = smartParkingBoy.parkingCarAndGetTicket(car);
         assertNotNull(ticket);
-        assertEquals(1,parkingLotGroup.getParkingLotList().get(0).getParkingLotMap().size());
+        assertNotNull(parkingLotMap.get("1"));
     }
     @Test
     void should_return_car_successfully_when_smartParkingBoy_take_the_car_given_one_car_parked_in_parkingLot_and_one_matched_ticket(){
-        SmartParkingBoy smartParkingBoy=new SmartParkingBoy();
-        ParkingLotGroup parkingLotGroup=new ParkingLotGroup();
-        Car car= new Car();
-        Ticket ticket = smartParkingBoy.smartParkingBoyParkingCarAndGetTicket(parkingLotGroup, car);
-        assertEquals(car, smartParkingBoy.getCar(parkingLotGroup, ticket));
+        Map<String, ParkingLot> parkingLotMap = creatParkingLots();
+        SmartParkingBoy smartParkingBoy = new SmartParkingBoy(parkingLotMap);
+        Car car = new Car();
+        Ticket ticket = smartParkingBoy.parkingCarAndGetTicket(car);
+        assertEquals(car, parkingLotMap.get("1").getCar(ticket));
     }
 
 }

@@ -2,40 +2,54 @@ package com.example.parking;
 
 import com.example.excepition.InvalidGettingException;
 import com.example.excepition.InvalidParkingException;
+import com.example.parking.entity.Car;
+import com.example.parking.entity.Ticket;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-public  class ParkingLot {
+public  class ParkingLot  implements ParkAndGet{
 
-    private Map<Ticket, Car> parkingLotMap ;
-    private static final int MAX_PARKING_COUNT = 50;
+    private Map<Ticket, Car> parkingLotMap =new HashMap<>();
+    private  int maxParkingCount;
+
 
     public ParkingLot(){
-        parkingLotMap = new HashMap<>();
+        this.maxParkingCount =50;
     }
+    public ParkingLot(int maxParkingCount){
+        this.maxParkingCount=maxParkingCount;
+    }
+    @Override
     public Ticket parkingCarAndGetTicket(Car car) {
         if (isNull(car)) {
             throw new InvalidParkingException("You need at least one car to get a ticket.");
         }
-        if (MAX_PARKING_COUNT==parkingLotMap.size()) return  null;
+        if (maxParkingCount==parkingLotMap.size()) return  null;
         Ticket ticket = new Ticket();
         parkingLotMap.put(ticket, car);
         return ticket;
     }
-
+    @Override
     public Car getCar(Ticket ticket) {
+        if (isNull(ticket)) {
+            throw new InvalidGettingException("You need at least one car to get a ticket.");
+        }
         if (!parkingLotMap.containsKey(ticket)) throw new InvalidGettingException("Unable to take the car.");
         return  parkingLotMap.remove(ticket);
     }
 
-    public Map<Ticket, Car> getParkingLotMap() {
-        return parkingLotMap;
+    public boolean checkParkingLotIsFull() {
+        return parkingLotMap.size() == maxParkingCount;
     }
 
-    public void setParkingLotMap(Map<Ticket, Car> parkingLotMap) {
-        this.parkingLotMap = parkingLotMap;
+    public int getParkingLotRemainCount() {
+        return maxParkingCount - parkingLotMap.size();
+    }
+
+    public int getMaxParkingCount() {
+        return maxParkingCount;
     }
 }

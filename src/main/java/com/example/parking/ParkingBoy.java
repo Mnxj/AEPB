@@ -1,21 +1,35 @@
 package com.example.parking;
 
-public class ParkingBoy {
+import com.example.excepition.InvalidParkingException;
+import com.example.parking.entity.Car;
+import com.example.parking.entity.Ticket;
 
-    public Ticket parkingBoyParkingCarAndGetTicket(ParkingLotGroup parkingLotGroup, Car car) {
-        int parkingLotNo = 0;
-        for (ParkingLot parkingLot : parkingLotGroup.getParkingLotList()) {
-            if (parkingLot.getParkingLotMap().size() < 50) {
-                return parkingLotGroup.parkingCarAndGetTicket(parkingLotNo, car);
+import java.util.Map;
+
+
+public class ParkingBoy  implements ParkAndGet{
+    private Map<String, ParkingLot> parkingLotMap;
+
+    public ParkingBoy(Map<String, ParkingLot> parkingLotMap) {
+        this.parkingLotMap = parkingLotMap;
+    }
+
+    @Override
+    public Ticket parkingCarAndGetTicket(Car car) {
+        Ticket ticket;
+        for (int parkingLotNumber = 1; parkingLotNumber <= 10; parkingLotNumber++) {
+            ParkingLot parkingLot = parkingLotMap.get(String.valueOf(parkingLotNumber));
+            if (!parkingLot.checkParkingLotIsFull()){
+                ticket = parkingLot.parkingCarAndGetTicket(car);
+                parkingLotMap.put(String.valueOf(parkingLotNumber), parkingLot);
+                return ticket;
             }
-            parkingLotNo++;
         }
-        return null;
+        throw new InvalidParkingException("parkingLots is full");
     }
 
-    public Car getCar(ParkingLotGroup parkingLotGroup, Ticket ticket) {
-        return parkingLotGroup.getCar(ticket);
+    @Override
+    public Car getCar(Ticket ticket) {
+        return ParkAndGet.getCarByTicket(ticket,parkingLotMap);
     }
-
-
 }
